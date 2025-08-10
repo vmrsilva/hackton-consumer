@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hackton.Infrastructure\Hackton.Infrastructure.csproj" />
+    <ProjectReference Include="..\Hackton.Shared\Hackton.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
