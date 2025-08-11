@@ -22,13 +22,15 @@ namespace Hackton.Consumer
 
             try
             {
+                _logger.LogInformation("Processing video {VideoId}", videoMessage.VideoId);
                 await _useCaseCommandHandler.Handle(videoMessage, context.CancellationToken).ConfigureAwait(false);
                 await Task.Delay(5000);
             }
             catch (Exception ex)
             {
 
-                _logger.LogError("Error processing video {VideoId}", videoMessage.VideoId);
+                _logger.LogError("Error processing video {VideoId}", ex.Message);
+
             }
         }
     }
