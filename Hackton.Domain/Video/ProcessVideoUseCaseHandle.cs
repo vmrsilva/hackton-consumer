@@ -1,26 +1,20 @@
 ﻿using Hackton.Domain.Interfaces.Abstractions.UseCaseAbstraction;
+using Hackton.Domain.Interfaces.Video.UseCases;
 using Hackton.Shared.Dto.Video;
 using Hackton.Shared.FileServices;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+using Hackton.Shared.ImageProcessor;
 using Xabe.FFmpeg;
-using ZXing;
-using ZXing.Common;
-using ZXing.Windows.Compatibility;
 
-namespace Hackton.Domain.Interfaces.Video.UseCases
+namespace Hackton.Domain.Video
 {
-    public class ProcessVideoUseCaseHandle : IUseCaseCommandHandler<VideoMessageDto>
+    public class ProcessVideoUseCaseHandle : IProcessVideoUseCaseHandle
     {
         private readonly IFileService _fileService;
-
-        public ProcessVideoUseCaseHandle(IFileService fileService)
+        private readonly IImagesProcessor _imagesProcessor;
+        public ProcessVideoUseCaseHandle(IFileService fileService, IImagesProcessor imagesProcessor)
         {
             _fileService = fileService;
+            _imagesProcessor = imagesProcessor;
         }
 
         public async Task Handle(VideoMessageDto command, CancellationToken cancellation = default)
@@ -52,15 +46,15 @@ namespace Hackton.Domain.Interfaces.Video.UseCases
 
             var resultados = new List<(TimeSpan, string)>();
 
-            var barcodeReader = new BarcodeReader
-            {
-                AutoRotate = true,
-                Options = new DecodingOptions
-                {
-                    TryHarder = true,
-                    PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.QR_CODE }
-                }
-            };
+            //var barcodeReader = new BarcodeReader
+            //{
+            //    AutoRotate = true,
+            //    Options = new DecodingOptions
+            //    {
+            //        TryHarder = true,
+            //        PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.QR_CODE }
+            //    }
+            //};
 
             // Lista arquivos gerados
             var files = Directory.GetFiles(framesFolder, "frame_*.png");
@@ -71,11 +65,11 @@ namespace Hackton.Domain.Interfaces.Video.UseCases
                 string framePath = files[i];
                 TimeSpan timestamp = TimeSpan.FromSeconds(i);
 
-                using var bitmap = new Bitmap(framePath);
-                var result = barcodeReader.Decode(bitmap);
-                if (result != null)
+                // using var bitmap = new Bitmap(framePath);
+                var result = _imagesProcessor.ProcessSingleImage(framePath);// "test";//  barcodeReader.Decode(bitmap);
+                if (!string.IsNullOrEmpty(result))
                 {
-                    resultados.Add((timestamp, result.Text));
+                    resultados.Add((timestamp, result));
                 }
             }
 
