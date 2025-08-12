@@ -1,5 +1,6 @@
 ﻿using Hackton.Shared.FileServices;
 using Hackton.Shared.FileServices.Settings;
+using Hackton.Shared.ImageProcessor;
 using Hackton.Shared.Messaging.Settings;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,7 @@ namespace Hackton.Shared
         {
             services.Configure<AzureBlobOptions>(configuration.GetSection("AzureBlob"));
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IImagesProcessor, ImagesProcessor>();
             return services;
         }
 

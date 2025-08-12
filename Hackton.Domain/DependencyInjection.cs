@@ -1,5 +1,5 @@
 ﻿using Hackton.Domain.Interfaces.Abstractions.UseCaseAbstraction;
-using Hackton.Domain.Interfaces.Video.UseCases;
+using Hackton.Domain.Video;
 using Hackton.Shared.Dto.Video;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
