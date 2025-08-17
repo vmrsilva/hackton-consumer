@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Collections.Concurrent;
 // Alias explícito para evitar todas as ambiguidades
 using ImageSharpImage = SixLabors.ImageSharp.Image;
-using Rgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 using L8 = SixLabors.ImageSharp.PixelFormats.L8;
+using Rgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 
 namespace Hackton.Shared.ImageProcessor

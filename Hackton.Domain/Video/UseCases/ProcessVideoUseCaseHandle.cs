@@ -1,11 +1,10 @@
-﻿using Hackton.Domain.Interfaces.Abstractions.UseCaseAbstraction;
-using Hackton.Domain.Interfaces.Video.UseCases;
+﻿using Hackton.Domain.Interfaces.Video.UseCases;
 using Hackton.Shared.Dto.Video;
 using Hackton.Shared.FileServices;
 using Hackton.Shared.ImageProcessor;
 using Xabe.FFmpeg;
 
-namespace Hackton.Domain.Video
+namespace Hackton.Domain.Video.UseCases
 {
     public class ProcessVideoUseCaseHandle : IProcessVideoUseCaseHandle
     {
@@ -19,24 +18,19 @@ namespace Hackton.Domain.Video
 
         public async Task Handle(VideoMessageDto command, CancellationToken cancellation = default)
         {
-            // Baixa o vídeo para stream
             var fileStream = await _fileService.DownloadVideoAsync("video.mp4");
 
-            // Salva vídeo em arquivo temporário
             string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
             using (var file = File.Create(tempFile))
             {
                 await fileStream.CopyToAsync(file, cancellation);
             }
 
-            // Cria pasta temporária para frames
             string framesFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(framesFolder);
 
-            // Padrão simples numérico para frames
             string outputPattern = Path.Combine(framesFolder, "frame_%04d.png");
 
-            // Comando FFmpeg para extrair 1 frame por segundo, sobrescrevendo (-y)
             string parameters = $"-y -i \"{tempFile}\" -vf fps=1 \"{outputPattern}\"";
 
             var conversion = FFmpeg.Conversions.New()
@@ -46,38 +40,25 @@ namespace Hackton.Domain.Video
 
             var resultados = new List<(TimeSpan, string)>();
 
-            //var barcodeReader = new BarcodeReader
-            //{
-            //    AutoRotate = true,
-            //    Options = new DecodingOptions
-            //    {
-            //        TryHarder = true,
-            //        PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.QR_CODE }
-            //    }
-            //};
 
-            // Lista arquivos gerados
             var files = Directory.GetFiles(framesFolder, "frame_*.png");
 
-            // fps=1 → cada frame equivale a 1 segundo
+
             for (int i = 0; i < files.Length; i++)
             {
                 string framePath = files[i];
                 TimeSpan timestamp = TimeSpan.FromSeconds(i);
 
-                // using var bitmap = new Bitmap(framePath);
-                var result = _imagesProcessor.ProcessSingleImage(framePath);// "test";//  barcodeReader.Decode(bitmap);
+                var result = _imagesProcessor.ProcessSingleImage(framePath);
                 if (!string.IsNullOrEmpty(result))
                 {
                     resultados.Add((timestamp, result));
                 }
             }
 
-            // Limpa arquivos temporários
             Directory.Delete(framesFolder, true);
             File.Delete(tempFile);
 
-            // Aqui você pode salvar ou enviar os resultados
             foreach (var (time, text) in resultados)
             {
                 Console.WriteLine($"QR Code detectado em {time}: {text}");
