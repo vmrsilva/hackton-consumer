@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hackton.Infrastructure\Hackton.Infrastructure.csproj" />
     <ProjectReference Include="..\Hackton.Shared\Hackton.Shared.csproj" />
   </ItemGroup>
 

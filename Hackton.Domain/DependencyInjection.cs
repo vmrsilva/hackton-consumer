@@ -1,13 +1,8 @@
 ﻿using Hackton.Domain.Interfaces.Abstractions.UseCaseAbstraction;
-using Hackton.Domain.Video;
+using Hackton.Domain.Video.UseCases;
 using Hackton.Shared.Dto.Video;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hackton.Domain
 {
