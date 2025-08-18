@@ -14,6 +14,7 @@ using Hackton.Domain;
 using Hackton.Shared;
 using Hackton.Shared.Dto.Video;
 using MassTransit;
+using Hackton.Infrastructure;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
@@ -28,6 +29,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddShared(configuration);
         services.AddDomain(configuration);
+        services.AddInfrastructure(configuration);
         //services.AddScoped<IContactRepository, ContactRepository>();
         //services.AddScoped<IContactService, ContactService>();
         //services.AddDbContext<TechChallangeContext>(options => options.UseSqlServer(configuration.GetConnectionString("Database")));

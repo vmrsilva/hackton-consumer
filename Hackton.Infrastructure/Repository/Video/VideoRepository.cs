@@ -1,6 +1,6 @@
 ﻿using Hackton.Domain.Interfaces.Base.Repository;
-using Hackton.Domain.Interfaces.Video.Entity;
 using Hackton.Domain.Interfaces.Video.Repository;
+using Hackton.Domain.Video.Entity;
 
 namespace Hackton.Infrastructure.Repository.Video
 {

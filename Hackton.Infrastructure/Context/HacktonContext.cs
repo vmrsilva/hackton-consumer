@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hackton.Domain.Video.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hackton.Infrastructure.Context
 {

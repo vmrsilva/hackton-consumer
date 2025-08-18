@@ -1,4 +1,4 @@
-﻿using Hackton.Domain.Interfaces.Video.Entity;
+﻿using Hackton.Domain.Video.Entity;
 
 namespace Hackton.Domain.Interfaces.Video.Repository
 {

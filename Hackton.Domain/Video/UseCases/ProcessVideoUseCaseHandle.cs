@@ -1,4 +1,7 @@
-﻿using Hackton.Domain.Interfaces.Video.UseCases;
+﻿using Hackton.Domain.Enums;
+using Hackton.Domain.Interfaces.Video.Repository;
+using Hackton.Domain.Interfaces.Video.UseCases;
+using Hackton.Domain.Video.Exceptions;
 using Hackton.Shared.Dto.Video;
 using Hackton.Shared.FileServices;
 using Hackton.Shared.ImageProcessor;
@@ -10,14 +13,23 @@ namespace Hackton.Domain.Video.UseCases
     {
         private readonly IFileService _fileService;
         private readonly IImagesProcessor _imagesProcessor;
-        public ProcessVideoUseCaseHandle(IFileService fileService, IImagesProcessor imagesProcessor)
+        private readonly IVideoRepository _videoRepository;
+        public ProcessVideoUseCaseHandle(IFileService fileService,
+                                         IImagesProcessor imagesProcessor,
+                                         IVideoRepository videoRepository)
         {
             _fileService = fileService;
             _imagesProcessor = imagesProcessor;
+            _videoRepository = videoRepository;
         }
 
         public async Task Handle(VideoMessageDto command, CancellationToken cancellation = default)
         {
+            var videoDb = await _videoRepository.GetByIdAsync(command.VideoId).ConfigureAwait(false);
+
+            if (videoDb is null)
+                throw new VideoNotFoundException();
+
             var fileStream = await _fileService.DownloadVideoAsync("video.mp4");
 
             string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
@@ -58,6 +70,9 @@ namespace Hackton.Domain.Video.UseCases
 
             Directory.Delete(framesFolder, true);
             File.Delete(tempFile);
+
+            videoDb.ChangeStatus(VideoStatusEnum.Concluido);
+            await _videoRepository.UpdateAsync(videoDb).ConfigureAwait(false);
 
             foreach (var (time, text) in resultados)
             {

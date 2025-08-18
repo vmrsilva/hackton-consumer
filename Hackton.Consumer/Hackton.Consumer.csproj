@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hackton.Domain\Hackton.Domain.csproj" />
+    <ProjectReference Include="..\Hackton.Infrastructure\Hackton.Infrastructure.csproj" />
     <ProjectReference Include="..\Hackton.Shared\Hackton.Shared.csproj" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,9 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Concurrent;
-// Alias explícito para evitar todas as ambiguidades
 using ImageSharpImage = SixLabors.ImageSharp.Image;
 using L8 = SixLabors.ImageSharp.PixelFormats.L8;
 using Rgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
-
 
 namespace Hackton.Shared.ImageProcessor
 {
@@ -34,7 +32,6 @@ namespace Hackton.Shared.ImageProcessor
 
                 try
                 {
-                    // Usando o alias ImageSharpImage
                     using (var image = ImageSharpImage.Load<Rgba32>(imagePath))
                     {
                         image.Mutate(x => x.Grayscale());
@@ -61,7 +58,6 @@ namespace Hackton.Shared.ImageProcessor
             }
         }
 
-        // Leitor compartilhado (thread-safe)
         private static readonly ZXing.ImageSharp.BarcodeReader<L8> _reader = new ZXing.ImageSharp.BarcodeReader<L8>
         {
             Options = new ZXing.Common.DecodingOptions
@@ -71,7 +67,6 @@ namespace Hackton.Shared.ImageProcessor
             }
         };
 
-        // Pool de MemoryStream para reutilização
         private readonly ConcurrentBag<MemoryStream> _streamPool = new ConcurrentBag<MemoryStream>();
 
         public void Dispose()
