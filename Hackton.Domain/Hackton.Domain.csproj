@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FFMpegCore" Version="5.2.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.4.2" />
     <PackageReference Include="Xabe.FFmpeg.Downloader" Version="6.0.2" />
 
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
