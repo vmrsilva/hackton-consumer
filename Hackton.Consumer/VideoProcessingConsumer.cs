@@ -19,7 +19,7 @@ namespace Hackton.Consumer
         public async Task Consume(ConsumeContext<VideoMessageDto> context)
         {
             var videoMessage = context.Message;
-            _logger.LogInformation("Received video message for VideoId: {video}", System.Text.Json.JsonSerializer.Serialize( videoMessage));
+            _logger.LogInformation("Received video message for VideoId: {video}", System.Text.Json.JsonSerializer.Serialize(videoMessage));
             try
             {
                 _logger.LogInformation("Processing video {VideoId}", videoMessage.VideoId);

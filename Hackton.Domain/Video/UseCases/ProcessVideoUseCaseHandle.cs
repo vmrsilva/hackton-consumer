@@ -8,7 +8,7 @@ using Hackton.Domain.VideoResult.Entity;
 using Hackton.Shared.Dto.Video;
 using Hackton.Shared.FileServices;
 using Hackton.Shared.ImageProcessor;
-using Xabe.FFmpeg;
+using Hackton.Shared.VideoSplit;
 
 namespace Hackton.Domain.Video.UseCases
 {
@@ -18,15 +18,18 @@ namespace Hackton.Domain.Video.UseCases
         private readonly IImagesProcessor _imagesProcessor;
         private readonly IVideoRepository _videoRepository;
         private readonly IVideoResultRepository _videoResultRepository;
+        private readonly IVideoSplitService _videoSplitService;
         public ProcessVideoUseCaseHandle(IFileService fileService,
                                          IImagesProcessor imagesProcessor,
                                          IVideoRepository videoRepository,
-                                         IVideoResultRepository videoResultRepository)
+                                         IVideoResultRepository videoResultRepository,
+                                         IVideoSplitService videoSplitService)
         {
             _fileService = fileService;
             _imagesProcessor = imagesProcessor;
             _videoRepository = videoRepository;
             _videoResultRepository = videoResultRepository;
+            _videoSplitService = videoSplitService;
         }
 
         public async Task Handle(VideoMessageDto command, CancellationToken cancellation = default)
@@ -42,29 +45,10 @@ namespace Hackton.Domain.Video.UseCases
 
             var extensionFile = command.FileName.Split('.')[1];
 
-            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + extensionFile);
-            using (var file = File.Create(tempFile))
-            {
-                await fileStream.CopyToAsync(file, cancellation);
-            }
+            var splitResult = await _videoSplitService.ProcessVideoSPlit(fileStream, extensionFile, cancellation).ConfigureAwait(false);
 
-            string framesFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(framesFolder);
-
-            string outputPattern = Path.Combine(framesFolder, "frame_%04d.png");
-
-            string parameters = $"-y -i \"{tempFile}\" -vf fps=1 \"{outputPattern}\"";
-
-            var conversion = FFmpeg.Conversions.New()
-                .AddParameter(parameters, ParameterPosition.PreInput);
-
-            await conversion.Start();
-
+            var files = splitResult.Files;
             var resultados = new List<(TimeSpan, string)>();
-
-
-            var files = Directory.GetFiles(framesFolder, "frame_*.png");
-
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -78,8 +62,8 @@ namespace Hackton.Domain.Video.UseCases
                 }
             }
 
-            Directory.Delete(framesFolder, true);
-            File.Delete(tempFile);
+            Directory.Delete(splitResult.FramesFolder, true);
+            File.Delete(splitResult.TempFilePath);
 
             await UpdateVideoStatusAsync(videoDb, VideoStatusEnum.Concluido).ConfigureAwait(false);
 

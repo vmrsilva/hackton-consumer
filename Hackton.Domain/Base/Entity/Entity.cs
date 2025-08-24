@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Hackton.Domain.Base.Entity
+﻿namespace Hackton.Domain.Base.Entity
 {
     public class BaseEntity
     {
