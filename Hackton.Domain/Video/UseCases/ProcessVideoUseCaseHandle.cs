@@ -26,7 +26,7 @@ namespace Hackton.Domain.Video.UseCases
             _fileService = fileService;
             _imagesProcessor = imagesProcessor;
             _videoRepository = videoRepository;
-            _videoResultRepository = videoResultRepository; 
+            _videoResultRepository = videoResultRepository;
         }
 
         public async Task Handle(VideoMessageDto command, CancellationToken cancellation = default)
@@ -38,9 +38,11 @@ namespace Hackton.Domain.Video.UseCases
 
             await UpdateVideoStatusAsync(videoDb, VideoStatusEnum.Processando).ConfigureAwait(false);
 
-            var fileStream = await _fileService.DownloadVideoAsync("video.mp4");
+            var fileStream = await _fileService.DownloadVideoAsync(command.FileName);
 
-            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
+            var extensionFile = command.FileName.Split('.')[1];
+
+            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + extensionFile);
             using (var file = File.Create(tempFile))
             {
                 await fileStream.CopyToAsync(file, cancellation);
