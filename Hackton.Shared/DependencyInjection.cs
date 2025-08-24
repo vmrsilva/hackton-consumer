@@ -1,6 +1,7 @@
 ﻿using Hackton.Shared.FileServices;
 using Hackton.Shared.FileServices.Settings;
 using Hackton.Shared.ImageProcessor;
+using Hackton.Shared.VideoSplit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ namespace Hackton.Shared
             services.Configure<AzureBlobOptions>(configuration.GetSection("AzureBlob"));
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImagesProcessor, ImagesProcessor>();
+            services.AddScoped<IVideoSplitService, VideoSplitService>();
             return services;
         }
 

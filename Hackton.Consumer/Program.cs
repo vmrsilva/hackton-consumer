@@ -1,20 +1,9 @@
-//using Hackton.Consumer;
-//using Hackton.Shared;
-
-//var builder = Host.CreateApplicationBuilder(args);
-//builder.Services.AddHostedService<Worker>();
-
-//builder.Services.AddShared(builder.Configuration);
-
-//var host = builder.Build();
-//host.Run();
-
 using Hackton.Consumer;
 using Hackton.Domain;
+using Hackton.Infrastructure;
 using Hackton.Shared;
 using Hackton.Shared.Dto.Video;
 using MassTransit;
-using Hackton.Infrastructure;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
@@ -25,14 +14,9 @@ IHost host = Host.CreateDefaultBuilder(args)
         var usuario = configuration.GetSection("MassTransit")["User"] ?? string.Empty;
         var senha = configuration.GetSection("MassTransit")["Password"] ?? string.Empty;
 
-        //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
         services.AddShared(configuration);
         services.AddDomain(configuration);
         services.AddInfrastructure(configuration);
-        //services.AddScoped<IContactRepository, ContactRepository>();
-        //services.AddScoped<IContactService, ContactService>();
-        //services.AddDbContext<TechChallangeContext>(options => options.UseSqlServer(configuration.GetConnectionString("Database")));
 
         services.AddMassTransit(x =>
         {

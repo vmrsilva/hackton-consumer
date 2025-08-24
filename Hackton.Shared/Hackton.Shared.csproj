@@ -18,6 +18,10 @@
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta11" />
     <PackageReference Include="ZXing.Net" Version="0.16.8" />
     <PackageReference Include="ZXing.Net.Bindings.ImageSharp" Version="0.16.8" />
+    
+    <PackageReference Include="FFMpegCore" Version="5.2.0" />
+    <PackageReference Include="Xabe.FFmpeg.Downloader" Version="6.0.2" />
+    
   </ItemGroup>
 
 </Project>

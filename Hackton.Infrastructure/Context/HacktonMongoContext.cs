@@ -1,7 +1,6 @@
 ﻿using Hackton.Domain.VideoResult.Entity;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using SixLabors.ImageSharp;
 using System.Security.Authentication;
 
 namespace Hackton.Infrastructure.Context
