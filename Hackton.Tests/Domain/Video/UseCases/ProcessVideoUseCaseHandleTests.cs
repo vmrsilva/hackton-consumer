@@ -105,7 +105,5 @@ namespace Hackton.Tests.Domain.Video.UseCases
             _imagesProcessor.Verify(x => x.ProcessSingleImage(It.IsAny<string>()), Times.Exactly(videoSplitResultDtoMock.Files.Count()));
             _videoResultRepository.Verify(x => x.Create(It.IsAny<VideoResultEntity>()), Times.Once);
         }
-
-
     }
 }
