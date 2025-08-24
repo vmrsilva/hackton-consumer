@@ -62,8 +62,11 @@ namespace Hackton.Domain.Video.UseCases
                 }
             }
 
-            Directory.Delete(splitResult.FramesFolder, true);
-            File.Delete(splitResult.TempFilePath);
+            if (!string.IsNullOrEmpty(splitResult.FramesFolder) && Directory.Exists(splitResult.FramesFolder))
+                Directory.Delete(splitResult.FramesFolder, true);
+
+            if (!string.IsNullOrWhiteSpace(splitResult.TempFilePath) && File.Exists(splitResult.TempFilePath))
+                File.Delete(splitResult.TempFilePath);
 
             await UpdateVideoStatusAsync(videoDb, VideoStatusEnum.Concluido).ConfigureAwait(false);
 
